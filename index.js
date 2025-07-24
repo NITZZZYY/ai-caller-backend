@@ -9,14 +9,7 @@ app.get('/ping', (req, res) => {
   res.send('pong');
 });
 
-// Data receiving route (optional)
-app.post('/', (req, res) => {
-  const { transcript, conversation_id, phone_number } = req.body;
-  console.log('Received data:', req.body);
-  res.json({ status: 'Success', message: 'Data received successfully' });
-});
-
-// Call simulation route
+// Call API
 app.post('/call', async (req, res) => {
   const { phone_number, message } = req.body;
 
@@ -33,7 +26,7 @@ app.post('/call', async (req, res) => {
     info: 'Mock call only — connect actual call logic here.',
   });
 });
-
+  
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
