@@ -2,23 +2,22 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Parse JSON requests
 app.use(express.json());
 
 // Health check route
 app.get('/ping', (req, res) => {
-  res.send('Pong from AI Caller Backend');
+  res.send('pong');
 });
 
-// Receive webhook-like data
+// Data receiving route (optional)
 app.post('/', (req, res) => {
   const { transcript, conversation_id, phone_number } = req.body;
   console.log('Received data:', req.body);
   res.json({ status: 'Success', message: 'Data received successfully' });
 });
 
-// Simulate a call endpoint
-app.post('/call', (req, res) => {
+// Call simulation route
+app.post('/call', async (req, res) => {
   const { phone_number, message } = req.body;
 
   if (!phone_number || !message) {
@@ -35,7 +34,6 @@ app.post('/call', (req, res) => {
   });
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
