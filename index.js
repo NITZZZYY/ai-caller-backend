@@ -2,22 +2,23 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse incoming JSON
+// Parse JSON requests
 app.use(express.json());
 
-// ✅ Root endpoint — can be used for basic testing
-app.post('/', (req, res) => {
-  const { transcript, conversation_id, phone_number } = req.body;
-  console.log('Received data at /:', req.body);
-
-  res.json({
-    status: 'Success',
-    message: 'Data received successfully at root endpoint',
-  });
+// Health check route
+app.get('/ping', (req, res) => {
+  res.send('Pong from AI Caller Backend');
 });
 
-// ✅ Call endpoint — for initiating mock outbound calls
-app.post('/call', async (req, res) => {
+// Receive webhook-like data
+app.post('/', (req, res) => {
+  const { transcript, conversation_id, phone_number } = req.body;
+  console.log('Received data:', req.body);
+  res.json({ status: 'Success', message: 'Data received successfully' });
+});
+
+// Simulate a call endpoint
+app.post('/call', (req, res) => {
   const { phone_number, message } = req.body;
 
   if (!phone_number || !message) {
@@ -34,12 +35,7 @@ app.post('/call', async (req, res) => {
   });
 });
 
-// ✅ Log all available routes for debugging (optional)
-app._router.stack
-  .filter((r) => r.route)
-  .forEach((r) => console.log(`Available route: ${r.route.path}`));
-
-// ✅ Start the server
+// Start the server
 app.listen(PORT, () => {
-  console.log(`✅ Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
