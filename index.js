@@ -2,14 +2,21 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware to parse incoming JSON
 app.use(express.json());
 
+// ✅ Root endpoint — can be used for basic testing
 app.post('/', (req, res) => {
   const { transcript, conversation_id, phone_number } = req.body;
-  console.log('Received data:', req.body);
-  res.json({ status: 'Success', message: 'Data received successfully' });
+  console.log('Received data at /:', req.body);
+
+  res.json({
+    status: 'Success',
+    message: 'Data received successfully at root endpoint',
+  });
 });
 
+// ✅ Call endpoint — for initiating mock outbound calls
 app.post('/call', async (req, res) => {
   const { phone_number, message } = req.body;
 
@@ -17,7 +24,6 @@ app.post('/call', async (req, res) => {
     return res.status(400).json({ error: 'Missing phone_number or message' });
   }
 
-  // Simulated outbound call logic
   console.log(`Initiating call to ${phone_number} with message: "${message}"`);
 
   res.json({
@@ -28,6 +34,12 @@ app.post('/call', async (req, res) => {
   });
 });
 
+// ✅ Log all available routes for debugging (optional)
+app._router.stack
+  .filter((r) => r.route)
+  .forEach((r) => console.log(`Available route: ${r.route.path}`));
+
+// ✅ Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✅ Server is running on http://localhost:${PORT}`);
 });
